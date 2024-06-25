@@ -1,0 +1,1102 @@
+{
+	"info": {
+		"_postman_id": "9e8312a9-b66f-41b3-b0a3-8ab81664b21c",
+		"name": "IGDB API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31832803",
+		"_collection_link": "https://igdb11.postman.co/workspace/IGDB-Workspace~89e0a0ac-6868-48bb-bec9-052cda2cd142/collection/31832803-9e8312a9-b66f-41b3-b0a3-8ab81664b21c?action=share&source=collection_link&creator=31832803"
+	},
+	"item": [
+		{
+			"name": "To Get Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json(); \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData).to.have.property('access_token');\r",
+							"    pm.expect(responseData).to.have.property('expires_in');\r",
+							"    pm.expect(responseData).to.have.property('token_type');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Access token is a non-empty string\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData.access_token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Expires_in is a non-negative integer\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData.expires_in).to.be.a('number');\r",
+							"  pm.expect(responseData.expires_in).to.be.at.least(0, \"Value should be a non-negative integer\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://id.twitch.tv/oauth2/token?client_id=w6v0v0mlb6p0d5lii85uh3047ds8dg&grant_type=client_credentials&client_secret=1s6qmmjzea9l5t8hianwtr7hepva17",
+					"protocol": "https",
+					"host": [
+						"id",
+						"twitch",
+						"tv"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						},
+						{
+							"key": "client_secret",
+							"value": "1s6qmmjzea9l5t8hianwtr7hepva17"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All games",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has the required fields\", function () {",
+							"    const responseData = pm.response.json(); ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(game) {",
+							"        pm.expect(game.id).to.exist;",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify the response content type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "clientSecret",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "tokenName",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Client-ID",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.igdb.com/v4/games/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"games",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Post data",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Client-ID",
+								"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer ozx105ffd4d2ix5evcil00z5h3mr6n",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.igdb.com/v4/games/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"igdb",
+								"com"
+							],
+							"path": [
+								"v4",
+								"games",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 24 Jun 2024 16:11:13 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "x-amzn-requestid",
+							"value": "558cbd22-e8a2-4ae2-be0d-691da873857d"
+						},
+						{
+							"key": "x-amzn-remapped-content-length",
+							"value": "213"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "Z4UZJE4RPHcEg5Q="
+						},
+						{
+							"key": "x-count",
+							"value": "282857"
+						},
+						{
+							"key": "x-amzn-remapped-date",
+							"value": "Mon, 24 Jun 2024 16:11:12 GMT"
+						},
+						{
+							"key": "x-cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "via",
+							"value": "1.1 531c499dd753eb20306358ab24a8d204.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "x-amz-cf-pop",
+							"value": "HYD57-P4"
+						},
+						{
+							"key": "x-amz-cf-id",
+							"value": "W5U0JYW5ne-u8niHy7AKQjIYrciRRMizg1OGypx_zdYqYYVIK_3JxA=="
+						},
+						{
+							"key": "CF-Cache-Status",
+							"value": "DYNAMIC"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/csp-reporting.cloudflare.com\\/cdn-cgi\\/script_monitor\\/report?m=HJT6Rorc1TAygPU7kAFTJ.tTfqTmmaPYlu7TMuNKRQ4-1719245473-1.0.1.1-jNSGZWxWQQ8caIT1alLbvlqB0kcu5DUjJB4zF3fX4_ioLR94bdxJ0nXDfHbPzizgSfy3_640OO0Kbl_wrVyrjo4TSiPa3BERRMuOq4JoGp62.AlXNw3ue.CNioUlHq93KXWCiRIbbIt5W8HulTDSBw\"}],\"group\":\"cf-csp-endpoint\",\"max_age\":86400}"
+						},
+						{
+							"key": "Content-Security-Policy-Report-Only",
+							"value": "script-src 'none'; report-uri https://csp-reporting.cloudflare.com/cdn-cgi/script_monitor/report?m=HJT6Rorc1TAygPU7kAFTJ.tTfqTmmaPYlu7TMuNKRQ4-1719245473-1.0.1.1-jNSGZWxWQQ8caIT1alLbvlqB0kcu5DUjJB4zF3fX4_ioLR94bdxJ0nXDfHbPzizgSfy3_640OO0Kbl_wrVyrjo4TSiPa3BERRMuOq4JoGp62.AlXNw3ue.CNioUlHq93KXWCiRIbbIt5W8HulTDSBw; report-to cf-csp-endpoint"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains; preload"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "898dfe08ae019aa7-NAG"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "br"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1\n    },\n    {\n        \"id\": 2\n    },\n    {\n        \"id\": 3\n    },\n    {\n        \"id\": 4\n    },\n    {\n        \"id\": 5\n    },\n    {\n        \"id\": 6\n    },\n    {\n        \"id\": 7\n    },\n    {\n        \"id\": 8\n    },\n    {\n        \"id\": 9\n    },\n    {\n        \"id\": 10\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Age Ratings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code:200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"pm.test(\"Validateresponse content type application/json\", function() {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate response schema for age_ratings\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(item) {\r",
+							"        pm.expect(item).to.be.an('object');\r",
+							"        pm.expect(item.id).to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify the response contains the expected array structure with the 'id' field\", function () {\r",
+							"    const responseData = pm.response.json();    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(item) {\r",
+							"        pm.expect(item).to.be.an('object');\r",
+							"        pm.expect(item.id).to.exist;\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/age_ratings",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"age_ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Video game characters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    ",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required schema fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(character) {",
+							"        pm.expect(character).to.have.property('id');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response is an array with at least one element\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/characters",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "companies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required field - id\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    responseData.forEach(function(company) {\r",
+							"        pm.expect(company).to.have.property('id');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id is a non-negative integer\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(company) {\r",
+							"        pm.expect(company.id).to.be.a('number').and.to.be.at.least(0);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/companies",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"companies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Game Events",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"pm.test(\"Response has the required Content-Type header of application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"pm.test(\"Response schema is as expected\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(event => {\r",
+							"        pm.expect(event).to.be.an('object');\r",
+							"        pm.expect(event.id).to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/events",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Game Engines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.to.have.status(200));\r",
+							"});\r",
+							"pm.test(\"Response has the required Content-Type header with value application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"pm.test(\"Response body is an array with at least one element\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"pm.test(\"Response schema is valid\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(engine) {\r",
+							"    pm.expect(engine).to.be.an('object');\r",
+							"    pm.expect(engine.id).to.be.a('number');\r",
+							"  });\r",
+							"});\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/game_engines",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"game_engines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "release_dates",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response' , function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test('response time ', function(){\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"})\r",
+							"pm.test('content-type ' , () => {\r",
+							"    pm.expect(pm.response.headers.get('content-type')).to.include('application/json');\r",
+							"})\r",
+							"pm.test('jason schema validation' , () => {\r",
+							"  const response_Data = pm.response.json();\r",
+							"  pm.expect(response_Data).to.be.an('array');  \r",
+							"  response_Data.forEach((rd) =>{\r",
+							"      pm.expect(rd).to.have.property('id').that.is.a('number');\r",
+							"  } )\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/release_dates",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"release_dates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get screenshots of games",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Fixed syntax error by adding the closing parenthesis properly\r",
+							"pm.test('response code ' , function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"pm.test('content type', function(){\r",
+							"    pm.expect(pm.response.headers.get(\"content-type\")).to.include('application/json');\r",
+							"})\r",
+							"pm.test('response time ' , function() {\r",
+							"    pm.expect(pm.response.responseTime).to.below(2000);\r",
+							"})\r",
+							"pm.test('jason schema validation' , function() {\r",
+							"    const responsedata = pm.response.json();\r",
+							"    pm.expect(responsedata).to.be.an('array');\r",
+							"    responsedata.forEach((screenshot) =>{\r",
+							"        pm.expect(screenshot).to.be.an('object');\r",
+							"        pm.expect(screenshot).to.have.property('id').that.is.a('number');\r",
+							"    })\r",
+							"\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/screenshots",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"screenshots"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "The logos of game engines",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response content type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"pm.test(\"Response schema is valid and contains the required fields\", function () {\r",
+							"    const responseData = pm.response.json(); \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(engineLogo) {\r",
+							"        pm.expect(engineLogo).to.be.an('object');\r",
+							"        pm.expect(engineLogo.id).to.exist.and.to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id field exists and is valid in the response array\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(engine) {\r",
+							"        pm.expect(engine.id).to.exist;\r",
+							"        pm.expect(engine.id).to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.igdb.com/v4/game_engine_logos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"game_engine_logos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create Game Events",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"pm.test(\"Response time is within an acceptable range\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"pm.test(\"Validate the response schema includes the 'id' field with a non-negative integer value\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(event) {\r",
+							"        pm.expect(event.id).to.be.a('number').and.to.be.at.least(0);\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": 138\r\n    },\r\n    {\r\n        \"id\": 171\r\n    },\r\n    {\r\n        \"id\": 172\r\n    },\r\n    {\r\n        \"id\": 173\r\n    },\r\n    {\r\n        \"id\": 174\r\n    },\r\n    {\r\n        \"id\": 175\r\n    },\r\n    {\r\n        \"id\": 177\r\n    },\r\n    {\r\n        \"id\": 178\r\n    },\r\n    {\r\n        \"id\": 180\r\n    },\r\n    {\r\n        \"id\": 181\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.igdb.com/v4/events",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create A Game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 2000ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"pm.test(\"Id field in the response array should exist and be a number\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(function(game) {\r",
+							"        pm.expect(game.id).to.exist;\r",
+							"        pm.expect(game.id).to.be.a('number');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response is an array with at least one element\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client-id",
+						"value": "w6v0v0mlb6p0d5lii85uh3047ds8dg",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 0ibvbxtpbpzukkpfqu6ggatrgim7b3",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": 11\r\n    },\r\n    {\r\n        \"id\": 12\r\n    },\r\n    {\r\n        \"id\": 13\r\n    },\r\n    {\r\n        \"id\": 14\r\n    },\r\n    {\r\n        \"id\": 15\r\n    },\r\n    {\r\n        \"id\": 16\r\n    },\r\n    {\r\n        \"id\": 17\r\n    },\r\n    {\r\n        \"id\": 18\r\n    },\r\n    {\r\n        \"id\": 19\r\n    },\r\n    {\r\n        \"id\": 20\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.igdb.com/v4/games/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"igdb",
+						"com"
+					],
+					"path": [
+						"v4",
+						"games",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
